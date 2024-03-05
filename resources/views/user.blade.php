@@ -20,6 +20,8 @@
                 <th>Username</th>
                 <th>Nama</th>
                 <th>ID Level Pengguna</th>
+                <th>Kode Level</th>
+                <th>Nama Level</th>
                 <th>Aksi</th>
             </tr>
 
@@ -35,6 +37,8 @@
                     <td style="padding: 1rem">{{ $data->username }}</td>
                     <td style="padding: 1rem">{{ $data->nama }}</td>
                     <td style="padding: 1rem">{{ $data->level_id }}</td>
+                    <td style="padding: 1rem">{{ $data->level->level_kode }}</td>
+                    <td style="padding: 1rem">{{ $data->level->level_name }}</td>
                     <td style="padding: 1rem">
                         <a href="{{ route('/user/ubah', $data->user_id) }}">Ubah</a> |
                         <a href="{{ route('/user/hapus', $data->user_id) }}">Hapus</a>
