@@ -12,17 +12,17 @@
     <h1>Data User</h1>
     <table border="1" cellpadding="2" cellspacing="0">
         <thead>
-            {{-- <tr>
+            <tr>
                 <th>ID</th>
                 <th>Username</th>
                 <th>Nama</th>
                 <th>ID Level Pengguna</th>
-            </tr> --}}
+            </tr>
 
             {{-- Praktikum 2.3 - Retreiving Aggregates --}}
-            <tr>
+            {{-- <tr>
                 <th>Jumlah Pengguna</th>
-            </tr>
+            </tr> --}}
         </thead>
         <tbody>
             {{-- @foreach ($datas as $data)
@@ -33,17 +33,18 @@
                     <td>{{ $data->level_id }}</td>
                 </tr>
             @endforeach --}}
-            {{-- <tr>
+
+            <tr>
                 <td>{{ $data->user_id }}</td>
                 <td>{{ $data->username }}</td>
                 <td>{{ $data->nama }}</td>
                 <td>{{ $data->level_id }}</td>
-            </tr> --}}
+            </tr>
 
             {{-- Praktikum 2.3 - Retreiving Aggregates --}}
-            <tr>
+            {{-- <tr>
                 <td>{{ $data }}</td>
-            </tr>
+            </tr> --}}
         </tbody>
     </table>
 </body>
