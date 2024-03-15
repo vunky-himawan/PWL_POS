@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\KategoriModel;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -21,8 +22,13 @@ class KategoriDataTable extends DataTable
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
-        return(new EloquentDataTable($query))
-            /* ->addColumn('action', 'kategori.action') */
+        return (new EloquentDataTable($query))
+            ->addColumn('action', function ($row) {
+                return '
+                <a href="kategori/edit/' . $row->kategori_id . '" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
+                <a href="kategori/destroy/' . $row->kategori_id . '" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
+                ';
+            })
             ->setRowId('id');
     }
 
@@ -43,16 +49,26 @@ class KategoriDataTable extends DataTable
             ->setTableId('kategori-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            //->dom('Bfrtip')
+            ->dom('Bfrtip')
             ->orderBy(1)
             ->selectStyleSingle()
-            ->buttons([
-                Button::make('excel'),
-                Button::make('csv'),
-                Button::make('pdf'),
-                Button::make('print'),
-                Button::make('reset'),
-                Button::make('reload'),
+            ->parameters([
+                'dom' => 'Bfrtip',
+                'buttons' => [
+                    'excel',
+                    'csv',
+                    'pdf',
+                    'print',
+                    'reset',
+                    'reload',
+                    [
+                        'text' => 'Add',
+                        'className' => 'btn btn-success',
+                        'action' => 'function(e, dt, button, config) {
+                            window.location.href = "/kategori/create";
+                        }'
+                    ]
+                ],
             ]);
     }
 
@@ -62,16 +78,12 @@ class KategoriDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            /* Column::computed('action')
-            ->exportable(false)
-            ->printable(false)
-            ->width(60)
-            ->addClass('text-center'), */
             Column::make('kategori_id'),
             Column::make('kategori_kode'),
             Column::make('kategori_nama'),
             Column::make('created_at'),
             Column::make('updated_at'),
+            Column::make('action'),
         ];
     }
 
@@ -80,6 +92,6 @@ class KategoriDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'Kategori_' . date('YmdHis');
+        return 'Kategori_' . date('YmdH');
     }
 }
