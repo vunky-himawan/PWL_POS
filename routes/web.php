@@ -21,6 +21,7 @@ Route::get('/', function () {
 });
 
 Route::get('/level', [LevelController::class, 'index']);
+Route::get('/level/tambah', [LevelController::class, 'create']);
 
 Route::prefix('/kategori')->controller(KategoriController::class)->group(function () {
     Route::get("/", 'index');

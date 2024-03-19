@@ -316,14 +316,12 @@ return [
             'can' => 'manage-blog',
         ],
         [
-            'text' => 'pages',
-            'url' => 'admin/pages',
-            'icon' => 'far fa-fw fa-file',
-            'label' => 4,
-            'label_color' => 'success',
+            'text' => "User",
+            'url' => "user",
+            'icon' => 'bi bi-person-lines-fill'
         ],
         [
-            'text' => 'kategori',
+            'text' => 'Kategori',
             'url' => 'kategori',
             'icon' => 'bi bi-ui-checks-grid'
         ],
