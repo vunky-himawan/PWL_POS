@@ -28,11 +28,12 @@
             </div>
 
             <form action="../kategori" method="POST">
+                @csrf
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="kodeKategori">Kode Kategori</label>
-                        <input type="text" name="kodeKategori"
-                            class="form-control @error('kategori_kode') is-invalid @enderror" id="kodeKategori"
+                        <label for="kategori_kode">Kode Kategori</label>
+                        <input type="text" name="kategori_kode"
+                            class="form-control @error('kategori_kode') is-invalid @enderror" id="kategori_kode"
                             placeholder="Masukkan Kode">
 
                         @error('kategori_kode')
@@ -40,8 +41,8 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="namaKategori">Nama Kategori</label>
-                        <input type="text" class="form-control" name="namaKategori" id="namaKategori"
+                        <label for="kategori_nama">Nama Kategori</label>
+                        <input type="text" class="form-control" name="kategori_nama" id="kategori_nama"
                             placeholder="Masukkan Nama">
                     </div>
                 </div>

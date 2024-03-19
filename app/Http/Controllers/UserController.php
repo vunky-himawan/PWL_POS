@@ -27,12 +27,15 @@ class UserController extends Controller
 
     public function tambah_simpan(Request $request): RedirectResponse
     {
-        UserModel::create([
-            'username' => $request->username,
-            'nama' => $request->nama,
-            'password' => Hash::make($request->password),
-            'level_id' => $request->level_id
+        $validate = $request->validate([
+            'nama' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'unique:m_user', 'min:5'],
+            'password' => ['required', 'string', 'min:12', 'regex:/^(?=.*[A-Z])(?=.*\W)/'],
+            'level_id' => ['required', 'integer'],
         ]);
+        $validate['password'] = bcrypt($validate['password']);
+
+        UserModel::create($validate);
 
         return response()->redirectTo('/user');
     }
