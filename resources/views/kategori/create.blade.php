@@ -9,18 +9,35 @@
 {{-- Content body: main page content --}}
 
 @section('content')
-    <div class="container">
+    <div class="container-fluid">
         <div class="card card-primary">
             <div class="card-header">
                 <h3 class="card-title">Buat Kategori Baru</h3>
+            </div>
+
+            <div>
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
             </div>
 
             <form action="../kategori" method="POST">
                 <div class="card-body">
                     <div class="form-group">
                         <label for="kodeKategori">Kode Kategori</label>
-                        <input type="text" name="kodeKategori" class="form-control" id="kodeKategori"
+                        <input type="text" name="kodeKategori"
+                            class="form-control @error('kategori_kode') is-invalid @enderror" id="kodeKategori"
                             placeholder="Masukkan Kode">
+
+                        @error('kategori_kode')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-group">
                         <label for="namaKategori">Nama Kategori</label>

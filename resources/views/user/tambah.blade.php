@@ -18,12 +18,12 @@
                         <div class="col-sm-6 form-group">
                             <label for="nama">Nama</label>
                             <input type="email" class="form-control" id="nama" name="nama"
-                                placeholder="Masukkan Nama">
+                                placeholder="Masukkan Nama" value="{{ old('nama') }}">
                         </div>
                         <div class="col-sm-6 form-group">
                             <label for="username">Username</label>
                             <input type="email" class="form-control" id="username" name="username"
-                                placeholder="Masukkan Username">
+                                placeholder="Masukkan Username" value="{{ old('username') }}">
                         </div>
                     </div>
                     <div class="row">
