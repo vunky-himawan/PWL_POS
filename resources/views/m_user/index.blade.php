@@ -34,7 +34,11 @@
                                     <td>
                                         <a class="btn btn-primary" href="/m_user/{{ $user->user_id }}">Show</a>
                                         <a class="btn btn-success" href="/m_user/{{ $user->user_id }}/edit">Edit</a>
-                                        <a class="btn btn-danger" href="/m_user/hapus/{{ $user->user_id }}">Hapus</a>
+                                        <form action="/m_user/{{ $user->user_id }}" method="POST" style="display: inline">
+                                            @method('DELETE')
+                                            @csrf
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach
