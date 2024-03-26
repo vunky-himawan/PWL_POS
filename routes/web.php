@@ -4,6 +4,7 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\POSController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,23 +18,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/level', [LevelController::class, 'index']);
-Route::get('/level/tambah', [LevelController::class, 'create']);
-
-Route::prefix('/kategori')->controller(KategoriController::class)->group(function () {
-    Route::get("/", 'index');
-    Route::get('/create', 'create');
-    Route::post('/', 'store');
-    Route::get('/edit/{id}', 'edit');
-    Route::put('/update/{id}', 'update');
-    Route::get('/destroy/{id}', 'destroy');
-});
+Route::get('/', [WelcomeController::class, 'index']);
 
 Route::resource('m_user', POSController::class);
+
+// Route::get('/level', [LevelController::class, 'index']);
+// Route::get('/level/tambah', [LevelController::class, 'create']);
+
+// Route::prefix('/kategori')->controller(KategoriController::class)->group(function () {
+//     Route::get("/", 'index');
+//     Route::get('/create', 'create');
+//     Route::post('/', 'store');
+//     Route::get('/edit/{id}', 'edit');
+//     Route::put('/update/{id}', 'update');
+//     Route::get('/destroy/{id}', 'destroy');
+// });
 
 // Route::get("/user", [UserController::class, 'index'])->name('/user');
 // Route::get("/user/tambah", [UserController::class, 'tambah'])->name('/user/tambah');
