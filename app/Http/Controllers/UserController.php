@@ -25,10 +25,13 @@ class UserController extends Controller
 
         $activeMenu = 'user';
 
+        $level = LevelModel::all();
+
         return response()->view('user.index', [
             'breadcrumb' => $breadcrumb,
             'activeMenu' => $activeMenu,
-            'page' => $page
+            'page' => $page,
+            'level' => $level
         ]);
     }
 
@@ -36,6 +39,10 @@ class UserController extends Controller
     {
         $users = UserModel::select('user_id', 'username', 'nama', 'level_id')
             ->with('level');
+
+        if ($request->level_id) {
+            $users->where('level_id', $request->level_id);
+        }
 
         return DataTables::of($users)
             ->addIndexColumn()
