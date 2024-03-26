@@ -4,67 +4,177 @@ namespace App\Http\Controllers;
 
 use App\Models\LevelModel;
 use App\Models\UserModel;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Hash;
+use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(): Response
     {
-        $users = UserModel::with('level')->get();
-        return view('user', ['datas' => $users]);
-    }
+        $breadcrumb = (object) [
+            'title' => 'Daftar User',
+            'list' => ['Home', 'User']
+        ];
 
-    public function tambah(): Response
-    {
-        $levels = LevelModel::all();
-        return response()->view('user.tambah', [
-            'levels' => $levels
+        $page = (object) [
+            'title' => 'Daftar user yang terdaftar dalam sistem'
+        ];
+
+        $activeMenu = 'user';
+
+        return response()->view('user.index', [
+            'breadcrumb' => $breadcrumb,
+            'activeMenu' => $activeMenu,
+            'page' => $page
         ]);
     }
 
-    public function tambah_simpan(Request $request): RedirectResponse
+    public function list(Request $request)
     {
-        $validate = $request->validate([
-            'nama' => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'unique:m_user', 'min:5'],
-            'password' => ['required', 'string', 'min:12', 'regex:/^(?=.*[A-Z])(?=.*\W)/'],
-            'level_id' => ['required', 'integer'],
+        $users = UserModel::select('user_id', 'username', 'nama', 'level_id')
+            ->with('level');
+
+        return DataTables::of($users)
+            ->addIndexColumn()
+            ->addColumn('aksi', function ($user) {
+                $btn = '<a href="' . url('/user/' . $user->user_id) . '" class="btn btn-info btn-sm">Detail</a> ';
+                $btn .= '<a href="' . url('/user/' . $user->user_id . '/edit') . '"
+                class="btn btn-warning btn-sm">Edit</a> ';
+                $btn .= '<form class="d-inline-block" method="POST" action="' .
+                    url('/user/' . $user->user_id) . '">'
+                    . csrf_field() . method_field('DELETE') .
+                    '<button type="submit" class="btn btn-danger btn-sm"
+                onclick="return confirm(\'Apakah Anda yakit menghapus data
+                ini?\');">Hapus</button></form>';
+                return $btn;
+            })
+            ->rawColumns(['aksi']) // memberitahu bahwa kolom aksi adalah html
+            ->make(true);
+    }
+
+    public function create(): Response
+    {
+        $breadcrumb = (object) [
+            'title' => 'Tambah User',
+            'list' => ['Home', 'User', 'Tambah']
+        ];
+
+        $page = (object) [
+            'title' => "Tambah User Baru"
+        ];
+
+        $level = LevelModel::all();
+        $activeMenu = 'user';
+
+        return response()->view('user.create', [
+            'breadcrumb' => $breadcrumb,
+            'page' => $page,
+            'level' => $level,
+            'activeMenu' => $activeMenu
         ]);
-        $validate['password'] = bcrypt($validate['password']);
-
-        UserModel::create($validate);
-
-        return response()->redirectTo('/user');
     }
 
-    public function ubah(int $id): Response
+    public function store(Request $request): RedirectResponse
     {
-        $user = UserModel::find($id);
-        return response()->view('user_ubah', [
-            'data' => $user
+        $request->validate([
+            'username' => 'required | string | min:3 | unique:m_user,username',
+            'nama' => 'required | string | max:100',
+            'password' => 'required | min:5',
+            'level_id' => 'required | integer'
+        ]);
+
+        UserModel::create([
+            'username' => $request->username,
+            'nama' => $request->nama,
+            'password' => bcrypt($request->password),
+            'level_id' => $request->level_id
+        ]);
+
+        return redirect('/user')->with('success', 'Data user berhasil disimpan');
+    }
+
+    public function show(string $id): Response
+    {
+        $user = UserModel::with('level')->find($id);
+
+        $breadcrumb = (object) [
+            'title' => 'Detail User',
+            'list' => ['Home', 'User', 'Detail']
+        ];
+
+        $page = (object) [
+            'title' => 'Detail User'
+        ];
+
+        $activeMenu = 'user';
+
+        return response()->view('user.show', [
+            'user' => $user,
+            'breadcrumb' => $breadcrumb,
+            'page' => $page,
+            'activeMenu' => $activeMenu
         ]);
     }
 
-    public function ubah_simpan(int $id, Request $request): RedirectResponse
+    public function edit(string $id): Response
     {
         $user = UserModel::find($id);
+        $level = LevelModel::all();
+        $breadcrumb = (object) [
+            'title' => 'Edit User',
+            'list' => ['Home', 'User', 'Edit']
+        ];
 
-        $user->username = $request->username;
-        $user->nama = $request->nama;
-        $user->level_id = $request->level_id;
+        $page = (object) [
+            'title' => 'Edit User'
+        ];
 
-        $user->save();
-        return response()->redirectTo('/user');
+        $activeMenu = 'user';
+
+        return response()->view('user.edit', [
+            'user' => $user,
+            'level' => $level,
+            'breadcrumb' => $breadcrumb,
+            'page' => $page,
+            'activeMenu' => $activeMenu
+        ]);
     }
 
-    public function hapus(int $id): RedirectResponse
+    public function update(Request $request, string $id): RedirectResponse
     {
-        $user = UserModel::find($id);
-        $user->delete();
+        $request->validate([
+            'username' => 'required | string | min:3 | unique:m_user,username',
+            'nama' => 'required | string | max:100',
+            'password' => 'nullable | min:5',
+            'level_id' => 'required | integer'
+        ]);
 
-        return response()->redirectTo('/user');
+        UserModel::find($id)->update([
+            'username' => $request->username,
+            'nama' => $request->nama,
+            'password' => $request->password ? bcrypt($request->password) : UserModel::find($id)->password,
+            'level_id' => $request->level_id
+        ]);
+
+        return redirect('/user')->with('success', 'Data user berhasil diubah');
+    }
+
+    public function destroy(string $id): RedirectResponse
+    {
+        $check = UserModel::find($id);
+        if (!$check) {
+            return redirect('/user')->with('error', 'Data user tidak ditemukan');
+        }
+
+        try {
+            UserModel::destroy($id);
+
+            return redirect('/user')->with('success', 'Data user berhasil dihapus');
+        } catch (QueryException $e) {
+            return redirect('/user')->with('error', 'Data user gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini');
+        }
     }
 }
