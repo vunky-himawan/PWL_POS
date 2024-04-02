@@ -27,7 +27,7 @@ class UserController extends Controller
 
         $level = LevelModel::all();
 
-        return response()->view('user.index', [
+        return response()->view('pages.user.index', [
             'breadcrumb' => $breadcrumb,
             'activeMenu' => $activeMenu,
             'page' => $page,
@@ -47,15 +47,15 @@ class UserController extends Controller
         return DataTables::of($users)
             ->addIndexColumn()
             ->addColumn('aksi', function ($user) {
-                $btn = '<a href="' . url('/user/' . $user->user_id) . '" class="btn btn-info btn-sm">Detail</a> ';
+                $btn = '<a href="' . url('/user/' . $user->user_id) . '" class="btn btn-info btn-sm"><i class="bi bi-info mr-2"></i>Detail</a> ';
                 $btn .= '<a href="' . url('/user/' . $user->user_id . '/edit') . '"
-                class="btn btn-warning btn-sm">Edit</a> ';
+                class="btn btn-warning btn-sm"><i class="bi bi-pencil-square mr-2"></i>Edit</a> ';
                 $btn .= '<form class="d-inline-block" method="POST" action="' .
                     url('/user/' . $user->user_id) . '">'
                     . csrf_field() . method_field('DELETE') .
                     '<button type="submit" class="btn btn-danger btn-sm"
                 onclick="return confirm(\'Apakah Anda yakit menghapus data
-                ini?\');">Hapus</button></form>';
+                ini?\');"><i class="bi bi-trash mr-2"></i>Hapus</button></form>';
                 return $btn;
             })
             ->rawColumns(['aksi']) // memberitahu bahwa kolom aksi adalah html
@@ -76,7 +76,7 @@ class UserController extends Controller
         $level = LevelModel::all();
         $activeMenu = 'user';
 
-        return response()->view('user.create', [
+        return response()->view('pages.user.create', [
             'breadcrumb' => $breadcrumb,
             'page' => $page,
             'level' => $level,
@@ -118,7 +118,7 @@ class UserController extends Controller
 
         $activeMenu = 'user';
 
-        return response()->view('user.show', [
+        return response()->view('pages.user.show', [
             'user' => $user,
             'breadcrumb' => $breadcrumb,
             'page' => $page,
@@ -130,6 +130,7 @@ class UserController extends Controller
     {
         $user = UserModel::find($id);
         $level = LevelModel::all();
+        
         $breadcrumb = (object) [
             'title' => 'Edit User',
             'list' => ['Home', 'User', 'Edit']
@@ -141,7 +142,7 @@ class UserController extends Controller
 
         $activeMenu = 'user';
 
-        return response()->view('user.edit', [
+        return response()->view('pages.user.edit', [
             'user' => $user,
             'level' => $level,
             'breadcrumb' => $breadcrumb,
@@ -152,12 +153,18 @@ class UserController extends Controller
 
     public function update(Request $request, string $id): RedirectResponse
     {
-        $request->validate([
-            'username' => 'required | string | min:3 | unique:m_user,username',
+        $user = UserModel::find($id);
+        $rules = [
             'nama' => 'required | string | max:100',
             'password' => 'nullable | min:5',
             'level_id' => 'required | integer'
-        ]);
+        ];
+
+        if ($user->username != $request->username) {
+            $rules['username'] = 'required | string | min:3 | unique:m_user,username';
+        }
+
+        $request->validate($rules);
 
         UserModel::find($id)->update([
             'username' => $request->username,
