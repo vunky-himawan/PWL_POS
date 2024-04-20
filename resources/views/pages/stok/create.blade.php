@@ -50,8 +50,8 @@
                 <div class="form-group row">
                     <label class="col-1 control-label col-form-label">Jumlah</label>
                     <div class="col-11">
-                        <input type="number" min="1" max="100" class="form-control" id="stok_jumlah"
-                            name="stok_jumlah" value="{{ old('stok_jumlah') }}" required>
+                        <input type="number" class="form-control" id="stok_jumlah" name="stok_jumlah"
+                            value="{{ old('stok_jumlah') }}" required>
                         @error('stok_jumlah')
                             <small class="form-text text-danger">{{ $message }}</small>
                         @enderror
@@ -60,8 +60,10 @@
                 <div class="form-group row">
                     <label class="col-1 control-label col-form-label"></label>
                     <div class="col-11">
-                        <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-floppy mr-2"></i>Simpan</button>
-                        <a class="btn btn-sm btn-default ml-1" href="{{ url('stok') }}"><i class="bi bi-arrow-90deg-left mr-2"></i>Kembali</a>
+                        <button type="submit" class="btn btn-primary btn-sm"><i
+                                class="bi bi-floppy mr-2"></i>Simpan</button>
+                        <a class="btn btn-sm btn-default ml-1" href="{{ url('stok') }}"><i
+                                class="bi bi-arrow-90deg-left mr-2"></i>Kembali</a>
                     </div>
                 </div>
             </form>

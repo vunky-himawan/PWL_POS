@@ -139,7 +139,17 @@ class StokController extends Controller
         $validated['sisa'] = $validated['stok_jumlah'];
 
         try {
-            StokModel::create($validated);
+            $oldStok = StokModel::where('barang_id', $validated['barang_id'])->first();
+            if (StokModel::where('barang_id', $validated['barang_id'])->exists()) {
+                StokModel::where('barang_id', $validated['barang_id'])->update([
+                    'sisa' => $oldStok->sisa + $validated['stok_jumlah'],
+                    'stok_tanggal' => $validated['stok_tanggal'],
+                    'stok_jumlah' => $oldStok->stok_jumlah + $validated['stok_jumlah'],
+                ]);
+            } else {
+                StokModel::create($validated);
+            }
+
 
             return redirect('/stok')->with('success', 'Stok berhasil ditambahkan');
         } catch (\Throwable $th) {
