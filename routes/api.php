@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\BarangController;
 use Illuminate\Http\Request;
@@ -22,3 +23,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/barang/{id}/get', [BarangController::class, 'get'])->middleware('api');
 Route::post('/register', RegisterController::class)->name('register');
+Route::post('/login', LoginController::class)->name('login');
