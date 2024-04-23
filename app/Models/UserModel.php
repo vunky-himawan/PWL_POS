@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class UserModel extends Model implements Authenticatable
+class UserModel extends Model implements Authenticatable, JWTSubject
 {
     use HasFactory;
 
@@ -70,5 +71,15 @@ class UserModel extends Model implements Authenticatable
     public function getRememberTokenName()
     {
         return 'remember_token';
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTIdentifier()
+    {
+        return [];
     }
 }
