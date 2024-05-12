@@ -38,13 +38,24 @@ class BarangController extends Controller
                 'barang_nama' => 'required',
                 'harga_beli' => 'required',
                 'harga_jual' => 'required',
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
 
             if ($validator->fails()) {
                 return response()->json($validator->errors(), 422);
             }
 
-            $product = BarangModel::create($request->all());
+            $request->merge(['image' => $request->image->hashName()]);
+
+
+            $product = BarangModel::create([
+                'kategori_id' => $request->kategori_id,
+                'barang_kode' => $request->barang_kode,
+                'barang_nama' => $request->barang_nama,
+                'harga_beli' => $request->harga_beli,
+                'harga_jual' => $request->harga_jual,
+                'image' => $request->image->hashName(),
+            ]);
 
             return response()->json([
                 'code' => 201,
@@ -87,7 +98,14 @@ class BarangController extends Controller
         try {
             $product = BarangModel::findOrFail($product_id);
 
-            $product->update($request->all());
+            $product->update([
+                'kategori_id' => $request->kategori_id ?? $product->kategori_id,
+                'barang_kode' => $request->barang_kode ?? $product->barang_kode,
+                'barang_nama' => $request->barang_nama ?? $product->barang_nama,
+                'harga_beli' => $request->harga_beli ?? $product->harga_beli,
+                'harga_jual' => $request->harga_jual ?? $product->harga_jual,
+                'image' => $request->image->hashName(),
+            ]);
 
             return response()->json([
                 'code' => 200,

@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\DetailTransaksiController;
 use App\Http\Controllers\Api\KategoriController;
 use App\Http\Controllers\Api\LevelController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\LogoutController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\BarangController;
+use App\Http\Controllers\Api\TransaksiController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +25,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/barang/{id}/get', [BarangController::class, 'get'])->middleware('api');
 Route::post('/register', RegisterController::class)->name('register');
+Route::post('/register1', RegisterController::class)->name('register1');
 Route::post('/login', LoginController::class)->name('login');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
@@ -49,6 +52,13 @@ Route::post('products', [BarangController::class, 'store']);
 Route::get('products/{product}', [BarangController::class, 'show']);
 Route::put('products/{product}', [BarangController::class, 'update']);
 Route::delete('products/{product}', [BarangController::class, 'destroy']);
+
+/* TRANSAKSI */
+Route::get('transactions', [DetailTransaksiController::class, 'index']);
+Route::post('transactions', [DetailTransaksiController::class, 'store']);
+Route::get('transactions/{transaction}', [DetailTransaksiController::class, 'show']);
+Route::put('transactions/{transaction}', [DetailTransaksiController::class, 'update']);
+Route::delete('transactions/{transaction}', [DetailTransaksiController::class, 'destroy']);
 
 /* USER */
 Route::get('users', [UserController::class, 'index']);

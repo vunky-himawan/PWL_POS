@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -20,7 +21,8 @@ class UserModel extends Authenticatable implements JWTSubject
             'level_id',
             'username',
             'nama',
-            'password'
+            'password',
+            'image'
         ];
 
     public function level(): BelongsTo
@@ -41,6 +43,13 @@ class UserModel extends Authenticatable implements JWTSubject
     public function updatedTransaksi(): HasMany
     {
         return $this->hasMany(TransaksiModel::class, 'updated_by', 'user_id');
+    }
+
+    protected function image(): Attribute
+    {
+        return Attribute::make(
+            get: fn($image) => url('storage/posts/' . $image),
+        );
     }
 
     public function getJWTCustomClaims()
