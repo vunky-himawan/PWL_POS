@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\Api\DetailTransaksiController;
 use App\Http\Controllers\Api\KategoriController;
 use App\Http\Controllers\Api\LevelController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\LogoutController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\BarangController;
+use App\Http\Controllers\Api\TransaksiController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -53,11 +53,11 @@ Route::put('products/{product}', [BarangController::class, 'update']);
 Route::delete('products/{product}', [BarangController::class, 'destroy']);
 
 /* TRANSAKSI */
-Route::get('transactions', [DetailTransaksiController::class, 'index']);
-Route::post('transactions', [DetailTransaksiController::class, 'store']);
-Route::get('transactions/{transaction}', [DetailTransaksiController::class, 'show']);
-Route::put('transactions/{transaction}', [DetailTransaksiController::class, 'update']);
-Route::delete('transactions/{transaction}', [DetailTransaksiController::class, 'destroy']);
+Route::get('transactions', [TransaksiController::class, 'index']);
+Route::post('transactions', [TransaksiController::class, 'store']);
+Route::get('transactions/{transaction}', [TransaksiController::class, 'show']);
+Route::put('transactions/{transaction}', [TransaksiController::class, 'update']);
+Route::delete('transactions/{transaction}', [TransaksiController::class, 'destroy']);
 
 /* USER */
 Route::get('users', [UserController::class, 'index']);
